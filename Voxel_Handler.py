@@ -68,7 +68,7 @@ class VoxelHandler:
         self.interaction_mode = 0
         if self.voxel_index == None:
             return
-        if self.chunk.voxels[self.voxel_index] == 0:
+        if self.chunk.voxels[self.voxel_index] == 0 or self.chunk.voxels[self.voxel_index] == WATER:
             return
         sound = self.get_sound(self.chunk.voxels[self.voxel_index], sounds)
         pg.mixer.Sound.play(sound)

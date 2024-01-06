@@ -28,6 +28,7 @@ class Scene:
         player_pos = glm.ivec3(int(self.app.player.position.x),int(self.app.player.position.y), int(self.app.player.position.z))
         voxel_id = self.get_voxel_id(player_pos)
         # print("VOXEL:",voxel_id)
+        # 水下后处理, 将画面填满水
         if voxel_id[0] == WATER:
             self.app.player.underwater = True
         else:
@@ -37,10 +38,11 @@ class Scene:
         voxel_id = self.get_voxel_id(player_pos)
         if voxel_id[0] == VOID or voxel_id[0] >= 45:
             # print(int(self.app.player.position.y), WORLD_H * CHUNK_SIZE - 1)
+            # 初始化位置在当前坐标的地上 而不是在空中
             if int(self.app.player.position.y) == WORLD_H * CHUNK_SIZE and self.initpos == 0:
                 while self.get_voxel_id(glm.ivec3(int(self.app.player.position.x),int(self.app.player.position.y - 2), int(self.app.player.position.z)))[0] == VOID:
                     self.app.player.position.y = self.app.player.position.y - 1
-                self.app.player.position.x = self.app.player.position.x - 2  
+                # self.app.player.position.x = self.app.player.position.x - 2
                 self.initpos = 1
             else:
                 self.app.player.position.y = self.app.player.position.y - 0.02 * 0.98  # 伪重力
