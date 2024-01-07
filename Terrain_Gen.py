@@ -2,25 +2,25 @@ from Noise import noise2, noise3
 from Settings import *
 from numba import njit
 from random import random
+from random import randint
 
 
 @njit
 def get_height(x, z):
-    # island mask
+    # 计算岛屿掩膜
     island = 1 / (pow(0.0025 * math.hypot(x - CENTER_XZ, z - CENTER_XZ), 20) + 0.0001)
     island = min(island, 1)
 
-    # amplitude
-    a1 = CENTER_Y
-    a2, a4, a8 = a1 * 0.5, a1 * 0.25, a1 * 0.125
+    # 振幅
+    a1, a2, a4, a8 = CENTER_Y, CENTER_Y * 0.5, CENTER_Y * 0.25, CENTER_Y * 0.125
 
-    # frequency
-    f1 = 0.005
-    f2, f4, f8 = f1 * 2, f1 *4, f1 * 8
+    # 频率
+    f1, f2, f4, f8 = 0.005, 0.005 * 2, 0.005 *4, 0.005 * 8
 
     if noise2(0.1 * x, 0.1 * z) < 0:
         a1 /= 1.07
 
+    # 通过振幅和频率生成地形，使得地形有起伏
     height = 0
     height += noise2(x * f1, z * f1) * a1 + a1
     height += noise2(x * f2, z * f2) * a2 - a2
@@ -41,7 +41,7 @@ def set_voxel_id(voxels, x, y, z, wx, wy, wz, world_height):
     voxel_id = 0
 
     if wy < world_height - 1:
-        # create caves
+        # 创建洞穴
         if (noise3(wx * 0.09, wy * 0.09, wz * 0.09) > 0 and noise2(wx * 0.1, wz * 0.1) * 3 + 3 < wy < world_height - 10):
             voxel_id = 0
         else:
@@ -64,10 +64,9 @@ def set_voxel_id(voxels, x, y, z, wx, wy, wz, world_height):
         else:
             voxel_id = SAND
 
-    # setting ID
     voxels[get_index(x, y, z)] = voxel_id
 
-    # place tree
+    # 放置树
     if wy < DIRT_LVL:
         place_tree(voxels, x, y, z, voxel_id)
 
@@ -83,7 +82,7 @@ def set_voxel_id(voxels, x, y, z, wx, wy, wz, world_height):
     if wy < DIRT_LVL:
         place_shrubs(voxels, x, y, z, voxel_id)
 
-    # place water
+    # 放置水
     if wy < WATER_LVL:
         water_height = WATER_LVL - wy
         for iy in range(1, water_height):
@@ -97,10 +96,9 @@ def place_pumpkins(voxels, x, y, z, voxel_id):
     if voxels[get_index(x, y + 1, z)] != VOID:
         return None
 
-    # dirt under the tree
     voxels[get_index(x, y, z)] = DIRT
 
-    # pumpkin
+    # 南瓜
     voxels[get_index(x, y + 1, z)] = PUMPKIN
 
 @njit
@@ -111,10 +109,9 @@ def place_melons(voxels, x, y, z, voxel_id):
     if voxels[get_index(x, y + 1, z)] != VOID:
         return None
 
-    # dirt under the tree
     voxels[get_index(x, y, z)] = DIRT
 
-    # melon
+    # 西瓜
     voxels[get_index(x, y + 1, z)] = MELON
 
 @njit
@@ -125,7 +122,6 @@ def place_shrubs(voxels, x, y, z, voxel_id):
     if voxels[get_index(x, y + 1, z)] != VOID:
         return None
 
-    # dirt under the tree
     voxels[get_index(x, y, z)] = GRASS
 
     grass_type = SHORT_GRASS
@@ -133,7 +129,7 @@ def place_shrubs(voxels, x, y, z, voxel_id):
     if rnd < 4:
         grass_type = TALL_GRASS
 
-    # grass
+    # 草
     voxels[get_index(x, y + 1, z)] = grass_type
 
 @njit
@@ -144,7 +140,6 @@ def place_flowers(voxels, x, y, z, voxel_id):
     if voxels[get_index(x, y + 1, z)] != VOID:
         return None
 
-    # dirt under the tree
     voxels[get_index(x, y, z)] = GRASS
 
     flower_type = RED_TULIP
@@ -164,7 +159,7 @@ def place_flowers(voxels, x, y, z, voxel_id):
     if rnd == 7:
         flower_type = RED_MUSHROOM
 
-    # flower
+    # 花
     voxels[get_index(x, y + 1, z)] = flower_type
 
 
@@ -180,12 +175,14 @@ def place_tree(voxels, x, y, z, voxel_id):
     if z - TREE_H_WIDTH < 0 or z + TREE_H_WIDTH >= CHUNK_SIZE:
         return None
 
-    # dirt under the tree
+    # 树下面放土
     voxels[get_index(x, y, z)] = DIRT
 
-    # leaves
+    # 叶子
+    tree_height=TREE_HEIGHT-randint(0,2)
+    tree_h_height=tree_height//2
     m = 0
-    for n, iy in enumerate(range(TREE_H_HEIGHT, TREE_HEIGHT - 1)):
+    for n, iy in enumerate(range(tree_h_height, tree_height - 1)):
         k = iy % 2
         rng = int(random() * 2)
         for ix in range(-TREE_H_WIDTH + m, TREE_H_WIDTH - m * rng):
@@ -194,13 +191,13 @@ def place_tree(voxels, x, y, z, voxel_id):
                     voxels[get_index(x + ix + k, y + iy, z + iz + k)] = LEAVES
         m += 1 if n > 0 else 3 if n > 1 else 0
 
-    # tree trunk
+    # 树干
     tree_type = random()
-    for iy in range(1, TREE_HEIGHT - 2):
+    for iy in range(1, tree_height - 2):
         if tree_type > 0.5:
             voxels[get_index(x, y + iy, z)] = OAK_WOOD
         elif tree_type <= 0.5:
             voxels[get_index(x, y + iy, z)] = BIRCH_WOOD
 
     # top
-    voxels[get_index(x, y + TREE_HEIGHT - 2, z)] = LEAVES
+    voxels[get_index(x, y + tree_height - 2, z)] = LEAVES

@@ -61,15 +61,21 @@ def pack_data(x, y, z, voxel_id, face_id, ao_id, flip_id):
     )
     return packed_data
 
-@njit
-def get_chunk_index(world_voxel_pos):
-    wx, wy, wz = world_voxel_pos
+# 用于计算给定世界空间中的块索引
+@njit # 导入njit装饰器，用于编译NumPy函数以获得更高的性能
+def get_chunk_index(world_voxel_pos):  # 接受一个包含世界空间中位置的三维元组world_voxel_pos
+    wx, wy, wz = world_voxel_pos  # 使用元组分解将位置分解为wx、wy和wz
+
+    # 使用整数除法将位置坐标映射到块索引的各个部分
     cx = wx // CHUNK_SIZE
     cy = wy // CHUNK_SIZE
     cz = wz // CHUNK_SIZE
+
+    # 使用条件检查来确保映射后的索引在有效范围内。如果索引不在有效范围内，函数将返回-1。
     if not (0 <= cx < WORLD_W and 0 <= cy < WORLD_H and 0 <= cz < WORLD_D):
         return -1
 
+    # 返回计算出的块索引
     index = cx + WORLD_W * cz + WORLD_AREA * cy
     return index
 
@@ -288,7 +294,7 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
 
                     continue
 
-                # top face
+                # 顶面
                 if is_void((x, y + 1, z), (wx, wy + 1, wz), world_voxels, voxel_id):
                     # get ao values
                     ao = get_ao((x, y + 1, z), (wx, wy + 1, wz), world_voxels,'Y', voxel_id)
@@ -305,7 +311,7 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                     else:
                         index = add_data(vertex_data, index, v0, v3, v2, v0, v2, v1)
 
-                # bottom face
+                # 底面
                 if is_void((x, y - 1, z), (wx, wy - 1, wz), world_voxels, voxel_id):
                     ao = get_ao((x, y - 1, z), (wx, wy - 1, wz), world_voxels,'Y', voxel_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
@@ -320,7 +326,7 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                     else:
                         index = add_data(vertex_data, index, v0, v2, v3, v0, v1, v2)
 
-                # right face
+                # 右面
                 if is_void((x + 1, y, z), (wx + 1, wy, wz), world_voxels, voxel_id):
                     ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_voxels, 'X', voxel_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
@@ -335,7 +341,7 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                     else:
                         index = add_data(vertex_data, index, v0, v1, v2, v0, v2, v3)
 
-                # left face
+                # 左面
                 if is_void((x - 1, y, z), (wx - 1, wy, wz), world_voxels, voxel_id):
                     ao = get_ao((x - 1, y, z), (wx - 1, wy, wz), world_voxels, 'X', voxel_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
@@ -350,7 +356,7 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                     else:
                         index = add_data(vertex_data, index, v0, v2, v1, v0, v3, v2)
 
-                # back face
+                # 后面
                 if is_void((x, y, z - 1), (wx, wy, wz - 1), world_voxels, voxel_id):
                     ao = get_ao((x, y, z - 1), (wx, wy, wz - 1), world_voxels, 'Z', voxel_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
@@ -365,7 +371,7 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                     else:
                         index = add_data(vertex_data, index, v0, v1, v2, v0, v2, v3)
 
-                # front face
+                # 前面
                 if is_void((x, y, z + 1), (wx, wy, wz + 1), world_voxels, voxel_id):
                     ao = get_ao((x, y, z + 1), (wx, wy, wz + 1), world_voxels, 'Z', voxel_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]

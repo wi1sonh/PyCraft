@@ -25,26 +25,5 @@ class QuadMesh(BaseMesh):
             (1, 1, 0), (0, 1, 0), (0, 0, 0),
             (1, 1, 0), (0, 0, 0), (1, 0, 0)
         ]
-
-
-        # tex_coord_vertices = [(0, 0), (1, 0), (1, 1), (0, 1)]
-        # tex_coord_indices = [
-        #     (0, 2, 3), (0, 1, 2),
-        #     (0, 2, 3), (0, 1, 2),
-        #     (0, 1, 2), (2, 3, 0),
-        #     (2, 3, 0), (2, 0, 1),
-        #     (0, 2, 3), (0, 1, 2),
-        #     (3, 1, 2), (3, 0, 1),
-        # ]
-        # tex_coord_data = self.get_data(tex_coord_vertices, tex_coord_indices)
-
-        # quad_buffer = [
-        #     -1.0, 1.0, 0.0, 0.0,
-        #     1.0, 1.0, 1.0, 0.0,
-        #     -1.0, -1.0, 1.0,
-        #     1.0, -1.0, 1.0, 1.0,
-        # ]
-        # vertex_data = np.array(quad_buffer, dtype='float16')
         vertex_data = np.hstack([vertices, tex_coords], dtype='float32')
-        # return vertex_data
         return vertex_data

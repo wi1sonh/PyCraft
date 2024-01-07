@@ -52,12 +52,12 @@ class Camera:
     def move_up(self, velocity):
         upaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position))[0]
         if upaabb == VOID or upaabb == WATER or upaabb >= 45:
-            self.position += glm.vec3(0, 1, 0) * 0.05 * 0.98
+            self.position += glm.vec3(0, 1, 0) * 0.5 * 0.98
 
     def move_down(self, velocity):
         downaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position - glm.vec3(0, 2, 0)))[0]
         if downaabb == VOID or downaabb == WATER or downaabb >= 45:
-            self.position -= glm.vec3(0, 1, 0) * velocity
+            self.position -= glm.vec3(0, 1, 0) * velocity * 10
 
     def move_forward(self, velocity):
         forwardaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position + glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z))) - glm.ivec3(0, 1, 0))[0]

@@ -22,29 +22,6 @@ class HotBarIconMesh(BaseMesh):
 
         length = 0.06 * ASPECT_RATIO
         vertices = [
-            # (0.39, self.y, 0.0), (0.33, self.y, 0.0), (0.33, self.y - length, 0.0),
-            # (0.39, self.y, 0.0), (0.33, self.y - length, 0.0), (0.39, self.y - length, 0.0),
-
-            # (0.3, self.y, 0.0), (0.24, self.y, 0.0), (0.24, self.y - length, 0.0),
-            # (0.3, self.y, 0.0), (0.24, self.y - length, 0.0), (0.3, self.y - length, 0.0),
-
-            # (0.21, self.y, 0.0), (0.15, self.y, 0.0), (0.15, self.y - length, 0.0),
-            # (0.21, self.y, 0.0), (0.15, self.y - length, 0.0), (0.21, self.y - length, 0.0),
-
-            # (0.12, self.y, 0.0), (0.06, self.y, 0.0), (0.06, self.y - length, 0.0),
-            # (0.12, self.y, 0.0), (0.06, self.y - length, 0.0), (0.12, self.y - length, 0.0),
-
-            # (0.03, self.y, 0.0), (-0.03, self.y, 0.0), (-0.03, self.y - length, 0.0),
-            # (0.03, self.y, 0.0), (-0.03, self.y - length, 0.0), (0.03, self.y - length, 0.0),
-
-            # (-0.06, self.y, 0.0), (-0.12, self.y, 0.0), (-0.12, self.y - length, 0.0),
-            # (-0.06, self.y, 0.0), (-0.12, self.y - length, 0.0), (-0.06, self.y - length, 0.0),
-
-            # (-0.15, self.y, 0.0), (-0.21, self.y, 0.0), (-0.21, self.y - length, 0.0),
-            # (-0.15, self.y, 0.0), (-0.21, self.y - length, 0.0), (-0.15, self.y - length, 0.0),
-
-            # (-0.24, self.y, 0.0), (-0.3, self.y, 0.0), (-0.3, self.y - length, 0.0),
-            # (-0.24, self.y, 0.0), (-0.3, self.y - length, 0.0), (-0.24, self.y - length, 0.0),
 
             (-0.33 + self.x, self.y, 0.0), (-0.39 + self.x, self.y, 0.0), (-0.39 + self.x, self.y - length, 0.0),
             (-0.33 + self.x, self.y, 0.0), (-0.39 + self.x, self.y - length, 0.0), (-0.33 + self.x, self.y - length, 0.0)

@@ -13,9 +13,6 @@ class HandactionMesh(BaseMesh):
         self.attrs = ('in_position', 'tex_coords',)
         self.vao = self.get_vao()
 
-    # def render(self):
-    #     self.vao.render()
-
     def get_vertex_data(self):
 
         vertices = [
