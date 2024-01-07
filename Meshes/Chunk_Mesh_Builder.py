@@ -1,48 +1,48 @@
-from Settings import *
+from Constants import *
 from numba import uint8, njit
 
 @njit
-def get_ao(local_pos, world_pos, world_voxels, plane, voxel_id):
+def get_ao(local_pos, world_pos, world_blocks, plane, block_id):
     x, y, z = local_pos
     wx, wy, wz = world_pos
 
     if plane == 'Y':
-        a = is_void((x, y, z - 1), (wx, wy, wz - 1), world_voxels, voxel_id)
-        b = is_void((x - 1, y, z -1),(wx -1, wy, wz - 1), world_voxels, voxel_id)
-        c = is_void((x - 1, y, z), (wx - 1, wy, wz), world_voxels, voxel_id)
-        d = is_void((x - 1, y, z + 1), (wx - 1, wy, wz + 1), world_voxels, voxel_id)
-        e = is_void((x, y, z + 1), (wx, wy, wz + 1), world_voxels, voxel_id)
-        f = is_void((x + 1, y, z + 1), (wx + 1, wy, wz + 1), world_voxels, voxel_id)
-        g = is_void((x + 1, y, z), (wx + 1, wy, wz), world_voxels, voxel_id)
-        h = is_void((x + 1, y, z - 1), (wx + 1, wy, wz - 1), world_voxels, voxel_id)
+        a = is_void((x, y, z - 1), (wx, wy, wz - 1), world_blocks, block_id)
+        b = is_void((x - 1, y, z -1),(wx -1, wy, wz - 1), world_blocks, block_id)
+        c = is_void((x - 1, y, z), (wx - 1, wy, wz), world_blocks, block_id)
+        d = is_void((x - 1, y, z + 1), (wx - 1, wy, wz + 1), world_blocks, block_id)
+        e = is_void((x, y, z + 1), (wx, wy, wz + 1), world_blocks, block_id)
+        f = is_void((x + 1, y, z + 1), (wx + 1, wy, wz + 1), world_blocks, block_id)
+        g = is_void((x + 1, y, z), (wx + 1, wy, wz), world_blocks, block_id)
+        h = is_void((x + 1, y, z - 1), (wx + 1, wy, wz - 1), world_blocks, block_id)
 
     if plane == 'X':
-        a = is_void((x, y, z - 1), (wx, wy, wz - 1), world_voxels, voxel_id)
-        b = is_void((x, y - 1, z - 1), (wx, wy - 1, wz - 1), world_voxels, voxel_id)
-        c = is_void((x, y - 1, z), (wx, wy - 1, wz), world_voxels, voxel_id)
-        d = is_void((x, y - 1, z + 1), (wx, wy - 1, wz + 1), world_voxels, voxel_id)
-        e = is_void((x, y, z + 1), (wx, wy, wz + 1), world_voxels, voxel_id)
-        f = is_void((x, y + 1, z + 1), (wx, wy + 1, wz + 1), world_voxels, voxel_id)
-        g = is_void((x, y + 1, z), (wx, wy + 1, wz), world_voxels, voxel_id)
-        h = is_void((x, y + 1, z - 1), (wx, wy + 1, wz - 1), world_voxels, voxel_id)
+        a = is_void((x, y, z - 1), (wx, wy, wz - 1), world_blocks, block_id)
+        b = is_void((x, y - 1, z - 1), (wx, wy - 1, wz - 1), world_blocks, block_id)
+        c = is_void((x, y - 1, z), (wx, wy - 1, wz), world_blocks, block_id)
+        d = is_void((x, y - 1, z + 1), (wx, wy - 1, wz + 1), world_blocks, block_id)
+        e = is_void((x, y, z + 1), (wx, wy, wz + 1), world_blocks, block_id)
+        f = is_void((x, y + 1, z + 1), (wx, wy + 1, wz + 1), world_blocks, block_id)
+        g = is_void((x, y + 1, z), (wx, wy + 1, wz), world_blocks, block_id)
+        h = is_void((x, y + 1, z - 1), (wx, wy + 1, wz - 1), world_blocks, block_id)
 
     if plane == 'Z':
-        a = is_void((x - 1, y    , z), (wx - 1, wy    , wz), world_voxels, voxel_id)
-        b = is_void((x - 1, y - 1, z), (wx - 1, wy - 1, wz), world_voxels, voxel_id)
-        c = is_void((x    , y - 1, z), (wx    , wy - 1, wz), world_voxels, voxel_id)
-        d = is_void((x + 1, y - 1, z), (wx + 1, wy - 1, wz), world_voxels, voxel_id)
-        e = is_void((x + 1, y    , z), (wx + 1, wy    , wz), world_voxels, voxel_id)
-        f = is_void((x + 1, y + 1, z), (wx + 1, wy + 1, wz), world_voxels, voxel_id)
-        g = is_void((x    , y + 1, z), (wx    , wy + 1, wz), world_voxels, voxel_id)
-        h = is_void((x - 1, y + 1, z), (wx - 1, wy + 1, wz), world_voxels, voxel_id)
+        a = is_void((x - 1, y    , z), (wx - 1, wy    , wz), world_blocks, block_id)
+        b = is_void((x - 1, y - 1, z), (wx - 1, wy - 1, wz), world_blocks, block_id)
+        c = is_void((x    , y - 1, z), (wx    , wy - 1, wz), world_blocks, block_id)
+        d = is_void((x + 1, y - 1, z), (wx + 1, wy - 1, wz), world_blocks, block_id)
+        e = is_void((x + 1, y    , z), (wx + 1, wy    , wz), world_blocks, block_id)
+        f = is_void((x + 1, y + 1, z), (wx + 1, wy + 1, wz), world_blocks, block_id)
+        g = is_void((x    , y + 1, z), (wx    , wy + 1, wz), world_blocks, block_id)
+        h = is_void((x - 1, y + 1, z), (wx - 1, wy + 1, wz), world_blocks, block_id)
 
     ao = (a + b + c), (g + h + a), (e + f + g), (c + d + e)
     return ao
 
 @njit
-def pack_data(x, y, z, voxel_id, face_id, ao_id, flip_id):
-    # x: 6bit y: 6bit z:6bit voxel_id: 8bit face_id: 3bit ao_id: 2bit flip_id: 1bit
-    a, b, c, d, e, f, g = x, y, z, voxel_id, face_id, ao_id, flip_id
+def pack_data(x, y, z, block_id, face_id, ao_id, flip_id):
+    # x: 6bit y: 6bit z:6bit block_id: 8bit face_id: 3bit ao_id: 2bit flip_id: 1bit
+    a, b, c, d, e, f, g = x, y, z, block_id, face_id, ao_id, flip_id
 
     b_bit, c_bit, d_bit, e_bit, f_bit, g_bit = 6, 6, 8, 3, 2, 1
     fg_bit = f_bit + g_bit
@@ -63,8 +63,8 @@ def pack_data(x, y, z, voxel_id, face_id, ao_id, flip_id):
 
 # 用于计算给定世界空间中的块索引
 @njit # 导入njit装饰器，用于编译NumPy函数以获得更高的性能
-def get_chunk_index(world_voxel_pos):  # 接受一个包含世界空间中位置的三维元组world_voxel_pos
-    wx, wy, wz = world_voxel_pos  # 使用元组分解将位置分解为wx、wy和wz
+def get_chunk_index(world_block_pos):  # 接受一个包含世界空间中位置的三维元组world_block_pos
+    wx, wy, wz = world_block_pos  # 使用元组分解将位置分解为wx、wy和wz
 
     # 使用整数除法将位置坐标映射到块索引的各个部分
     cx = wx // CHUNK_SIZE
@@ -80,61 +80,61 @@ def get_chunk_index(world_voxel_pos):  # 接受一个包含世界空间中位置
     return index
 
 @njit
-def is_void(local_voxel_pos, world_voxel_pos, world_voxels, voxel_id):
-   chunk_index = get_chunk_index(world_voxel_pos)
+def is_void(local_block_pos, world_block_pos, world_blocks, block_id):
+   chunk_index = get_chunk_index(world_block_pos)
    if chunk_index == -1:
        return False
-   chunk_voxels = world_voxels[chunk_index]
+   chunk_blocks = world_blocks[chunk_index]
 
-   x, y, z = local_voxel_pos
-   voxel_index = x % CHUNK_SIZE + z % CHUNK_SIZE * CHUNK_SIZE + y % CHUNK_SIZE * CHUNK_AREA
+   x, y, z = local_block_pos
+   block_index = x % CHUNK_SIZE + z % CHUNK_SIZE * CHUNK_SIZE + y % CHUNK_SIZE * CHUNK_AREA
 
     # Transparent Single Blocks
-   if voxel_id != WATER and chunk_voxels[voxel_index] == WATER:
+   if block_id != WATER and chunk_blocks[block_index] == WATER:
        return True
 
-   if voxel_id != GLASS and chunk_voxels[voxel_index] == GLASS:
+   if block_id != GLASS and chunk_blocks[block_index] == GLASS:
        return True
 
-#    for voxel_type in TRANSPARENT_BLOCKS_SINGLE:
-#        if voxel_id != voxel_type and chunk_voxels[voxel_index] == voxel_type:
+#    for block_type in TRANSPARENT_BLOCKS_SINGLE:
+#        if block_id != block_type and chunk_blocks[block_index] == block_type:
 #            return True
 
-#    for voxel_type in TRANSPARENT_BLOCKS:
-#     if chunk_voxels[voxel_index] == voxel_type:
+#    for block_type in TRANSPARENT_BLOCKS:
+#     if chunk_blocks[block_index] == block_type:
 #         return True
 
-   if chunk_voxels[voxel_index] == LEAVES:
+   if chunk_blocks[block_index] == LEAVES:
        return True
 
-   if chunk_voxels[voxel_index] == RED_TULIP:
+   if chunk_blocks[block_index] == RED_TULIP:
        return True
 
-   if chunk_voxels[voxel_index] == WHITE_TULIP:
+   if chunk_blocks[block_index] == WHITE_TULIP:
        return True
 
-   if chunk_voxels[voxel_index] == PINK_TULIP:
+   if chunk_blocks[block_index] == PINK_TULIP:
        return True
 
-   if chunk_voxels[voxel_index] == PEONY:
+   if chunk_blocks[block_index] == PEONY:
        return True
 
-   if chunk_voxels[voxel_index] == ORANGE_TULIP:
+   if chunk_blocks[block_index] == ORANGE_TULIP:
        return True
 
-   if chunk_voxels[voxel_index] == RED_MUSHROOM:
+   if chunk_blocks[block_index] == RED_MUSHROOM:
        return True
 
-   if chunk_voxels[voxel_index] == DANDELION:
+   if chunk_blocks[block_index] == DANDELION:
        return True
 
-   if chunk_voxels[voxel_index] == SHORT_GRASS:
+   if chunk_blocks[block_index] == SHORT_GRASS:
        return True
 
-   if chunk_voxels[voxel_index] == TALL_GRASS:
+   if chunk_blocks[block_index] == TALL_GRASS:
        return True
 
-   if chunk_voxels[voxel_index]:
+   if chunk_blocks[block_index]:
        return False
 
    return True
@@ -147,103 +147,103 @@ def add_data(vertex_data, index, *vertices):
     return index
 
 @njit
-def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transparent=False):
+def build_chunk_mesh(chunk_blocks, format_size, chunk_pos, world_blocks, transparent=False):
     vertex_data = np.empty(CHUNK_VOL * 18 * format_size, dtype='uint32')
     index = 0
 
     for x in range(CHUNK_SIZE):
         for y in range(CHUNK_SIZE):
             for z in range(CHUNK_SIZE):
-                voxel_id = chunk_voxels[x + CHUNK_SIZE * z + CHUNK_AREA * y]
+                block_id = chunk_blocks[x + CHUNK_SIZE * z + CHUNK_AREA * y]
 
-                if not voxel_id:
+                if not block_id:
                     continue
 
                 if not transparent:
-                    # for voxel_type in TRANSPARENT_BLOCKS:
-                    #     if voxel_id == voxel_type:
+                    # for block_type in TRANSPARENT_BLOCKS:
+                    #     if block_id == block_type:
                     #         continue
-                    # for voxel_type in TRANSPARENT_BLOCKS_SINGLE:
-                    #     if voxel_id == voxel_type:
+                    # for block_type in TRANSPARENT_BLOCKS_SINGLE:
+                    #     if block_id == block_type:
                     #         continue
-                    if voxel_id == WATER:
+                    if block_id == WATER:
                         continue
-                    if voxel_id == LEAVES:
+                    if block_id == LEAVES:
                         continue
-                    if voxel_id == GLASS:
+                    if block_id == GLASS:
                         continue
-                    if voxel_id == RED_TULIP:
+                    if block_id == RED_TULIP:
                         continue
-                    if voxel_id == WHITE_TULIP:
+                    if block_id == WHITE_TULIP:
                         continue
-                    if voxel_id == PINK_TULIP:
+                    if block_id == PINK_TULIP:
                         continue
-                    if voxel_id == PEONY:
+                    if block_id == PEONY:
                         continue
-                    if voxel_id == ORANGE_TULIP:
+                    if block_id == ORANGE_TULIP:
                         continue
-                    if voxel_id == RED_MUSHROOM:
+                    if block_id == RED_MUSHROOM:
                         continue
-                    if voxel_id == DANDELION:
+                    if block_id == DANDELION:
                         continue
-                    if voxel_id == SHORT_GRASS:
+                    if block_id == SHORT_GRASS:
                         continue
-                    if voxel_id == TALL_GRASS:
+                    if block_id == TALL_GRASS:
                         continue
 
 
                 if transparent:
                     can_render = False
-                    # for voxel_type in TRANSPARENT_BLOCKS:
-                    #     if voxel_id == voxel_type:
+                    # for block_type in TRANSPARENT_BLOCKS:
+                    #     if block_id == block_type:
                     #         can_render = True
-                    # for voxel_type in TRANSPARENT_BLOCKS_SINGLE:
-                    #     if voxel_id == voxel_type:
+                    # for block_type in TRANSPARENT_BLOCKS_SINGLE:
+                    #     if block_id == block_type:
                     #         can_render = True
-                    if voxel_id == WATER:
+                    if block_id == WATER:
                         can_render = True
-                    if voxel_id == LEAVES:
+                    if block_id == LEAVES:
                         can_render = True
-                    if voxel_id == GLASS:
+                    if block_id == GLASS:
                         can_render = True
-                    if voxel_id == RED_TULIP:
+                    if block_id == RED_TULIP:
                         can_render = True
-                    if voxel_id == WHITE_TULIP:
+                    if block_id == WHITE_TULIP:
                         can_render = True
-                    if voxel_id == PINK_TULIP:
+                    if block_id == PINK_TULIP:
                         can_render = True
-                    if voxel_id == ORANGE_TULIP:
+                    if block_id == ORANGE_TULIP:
                         can_render = True
-                    if voxel_id == PEONY:
+                    if block_id == PEONY:
                         can_render = True
-                    if voxel_id == RED_MUSHROOM:
+                    if block_id == RED_MUSHROOM:
                         can_render = True
-                    if voxel_id == SHORT_GRASS:
+                    if block_id == SHORT_GRASS:
                         can_render = True
-                    if voxel_id == TALL_GRASS:
+                    if block_id == TALL_GRASS:
                         can_render = True
-                    if voxel_id == DANDELION:
+                    if block_id == DANDELION:
                         can_render = True
 
                     if can_render != True:
                         continue
 
-                # voxel world position
+                # block world position
                 cx, cy, cz = chunk_pos
                 wx = x + cx * CHUNK_SIZE
                 wz = z + cz * CHUNK_SIZE
                 wy = y + cy * CHUNK_SIZE
 
                 # billboard
-                if RED_TULIP <= voxel_id <= TALL_GRASS:
+                if RED_TULIP <= block_id <= TALL_GRASS:
                     # diagonal 1
-                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_voxels, 'X', voxel_id)
+                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_blocks, 'X', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x, y    , z    , voxel_id, 2, ao[0], flip_id)
-                    v1 = pack_data(x, y + 1, z    , voxel_id, 2, ao[1], flip_id)
-                    v2 = pack_data(x + 1, y + 1, z + 1, voxel_id, 2, ao[2], flip_id)
-                    v3 = pack_data(x + 1, y    , z + 1, voxel_id, 2, ao[3], flip_id)
+                    v0 = pack_data(x, y    , z    , block_id, 2, ao[0], flip_id)
+                    v1 = pack_data(x, y + 1, z    , block_id, 2, ao[1], flip_id)
+                    v2 = pack_data(x + 1, y + 1, z + 1, block_id, 2, ao[2], flip_id)
+                    v3 = pack_data(x + 1, y    , z + 1, block_id, 2, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v0, v1, v3, v1, v2)
@@ -251,13 +251,13 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v1, v2, v0, v2, v3)
 
                     # diagonal 2
-                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_voxels, 'X', voxel_id)
+                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_blocks, 'X', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x + 1, y    , z + 1    , voxel_id, 2, ao[0], flip_id)
-                    v1 = pack_data(x + 1, y + 1, z + 1    , voxel_id, 2, ao[1], flip_id)
-                    v2 = pack_data(x, y + 1, z, voxel_id, 2, ao[2], flip_id)
-                    v3 = pack_data(x, y    , z, voxel_id, 2, ao[3], flip_id)
+                    v0 = pack_data(x + 1, y    , z + 1    , block_id, 2, ao[0], flip_id)
+                    v1 = pack_data(x + 1, y + 1, z + 1    , block_id, 2, ao[1], flip_id)
+                    v2 = pack_data(x, y + 1, z, block_id, 2, ao[2], flip_id)
+                    v3 = pack_data(x, y    , z, block_id, 2, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v0, v1, v3, v1, v2)
@@ -265,13 +265,13 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v1, v2, v0, v2, v3)
 
                     # diagonal 3
-                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_voxels, 'X', voxel_id)
+                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_blocks, 'X', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x + 1, y    , z    , voxel_id, 2, ao[0], flip_id)
-                    v1 = pack_data(x + 1, y + 1, z    , voxel_id, 2, ao[1], flip_id)
-                    v2 = pack_data(x, y + 1, z + 1, voxel_id, 2, ao[2], flip_id)
-                    v3 = pack_data(x, y    , z + 1, voxel_id, 2, ao[3], flip_id)
+                    v0 = pack_data(x + 1, y    , z    , block_id, 2, ao[0], flip_id)
+                    v1 = pack_data(x + 1, y + 1, z    , block_id, 2, ao[1], flip_id)
+                    v2 = pack_data(x, y + 1, z + 1, block_id, 2, ao[2], flip_id)
+                    v3 = pack_data(x, y    , z + 1, block_id, 2, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v0, v1, v3, v1, v2)
@@ -279,13 +279,13 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v1, v2, v0, v2, v3)
 
                     # diagonal 4
-                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_voxels, 'X', voxel_id)
+                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_blocks, 'X', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x, y, z + 1    , voxel_id, 2, ao[0], flip_id)
-                    v1 = pack_data(x, y + 1, z + 1   , voxel_id, 2, ao[1], flip_id)
-                    v2 = pack_data(x + 1, y + 1, z, voxel_id, 2, ao[2], flip_id)
-                    v3 = pack_data(x + 1,y, z, voxel_id, 2, ao[3], flip_id)
+                    v0 = pack_data(x, y, z + 1    , block_id, 2, ao[0], flip_id)
+                    v1 = pack_data(x, y + 1, z + 1   , block_id, 2, ao[1], flip_id)
+                    v2 = pack_data(x + 1, y + 1, z, block_id, 2, ao[2], flip_id)
+                    v3 = pack_data(x + 1,y, z, block_id, 2, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v0, v1, v3, v1, v2)
@@ -295,16 +295,16 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                     continue
 
                 # 顶面
-                if is_void((x, y + 1, z), (wx, wy + 1, wz), world_voxels, voxel_id):
+                if is_void((x, y + 1, z), (wx, wy + 1, wz), world_blocks, block_id):
                     # get ao values
-                    ao = get_ao((x, y + 1, z), (wx, wy + 1, wz), world_voxels,'Y', voxel_id)
+                    ao = get_ao((x, y + 1, z), (wx, wy + 1, wz), world_blocks,'Y', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    # format: x, y, z, voxel_id, face_id, ao_id
-                    v0 = pack_data(x    , y + 1, z    , voxel_id, 0, ao[0], flip_id)
-                    v1 = pack_data(x + 1, y + 1, z    , voxel_id, 0, ao[1], flip_id)
-                    v2 = pack_data(x + 1, y + 1, z + 1, voxel_id, 0, ao[2], flip_id)
-                    v3 = pack_data(x    , y + 1, z + 1, voxel_id, 0, ao[3], flip_id)
+                    # format: x, y, z, block_id, face_id, ao_id
+                    v0 = pack_data(x    , y + 1, z    , block_id, 0, ao[0], flip_id)
+                    v1 = pack_data(x + 1, y + 1, z    , block_id, 0, ao[1], flip_id)
+                    v2 = pack_data(x + 1, y + 1, z + 1, block_id, 0, ao[2], flip_id)
+                    v3 = pack_data(x    , y + 1, z + 1, block_id, 0, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v1, v0, v3, v1, v3, v2)
@@ -312,14 +312,14 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v3, v2, v0, v2, v1)
 
                 # 底面
-                if is_void((x, y - 1, z), (wx, wy - 1, wz), world_voxels, voxel_id):
-                    ao = get_ao((x, y - 1, z), (wx, wy - 1, wz), world_voxels,'Y', voxel_id)
+                if is_void((x, y - 1, z), (wx, wy - 1, wz), world_blocks, block_id):
+                    ao = get_ao((x, y - 1, z), (wx, wy - 1, wz), world_blocks,'Y', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x    , y, z    , voxel_id, 1, ao[0], flip_id)
-                    v1 = pack_data(x + 1, y, z    , voxel_id, 1, ao[1], flip_id)
-                    v2 = pack_data(x + 1, y, z + 1, voxel_id, 1, ao[2], flip_id)
-                    v3 = pack_data(x    , y, z + 1, voxel_id, 1, ao[3], flip_id)
+                    v0 = pack_data(x    , y, z    , block_id, 1, ao[0], flip_id)
+                    v1 = pack_data(x + 1, y, z    , block_id, 1, ao[1], flip_id)
+                    v2 = pack_data(x + 1, y, z + 1, block_id, 1, ao[2], flip_id)
+                    v3 = pack_data(x    , y, z + 1, block_id, 1, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v1, v3, v0, v1, v2, v3)
@@ -327,14 +327,14 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v2, v3, v0, v1, v2)
 
                 # 右面
-                if is_void((x + 1, y, z), (wx + 1, wy, wz), world_voxels, voxel_id):
-                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_voxels, 'X', voxel_id)
+                if is_void((x + 1, y, z), (wx + 1, wy, wz), world_blocks, block_id):
+                    ao = get_ao((x + 1, y, z), (wx + 1, wy, wz), world_blocks, 'X', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x + 1, y    , z    , voxel_id, 2, ao[0], flip_id)
-                    v1 = pack_data(x + 1, y + 1, z    , voxel_id, 2, ao[1], flip_id)
-                    v2 = pack_data(x + 1, y + 1, z + 1, voxel_id, 2, ao[2], flip_id)
-                    v3 = pack_data(x + 1, y    , z + 1, voxel_id, 2, ao[3], flip_id)
+                    v0 = pack_data(x + 1, y    , z    , block_id, 2, ao[0], flip_id)
+                    v1 = pack_data(x + 1, y + 1, z    , block_id, 2, ao[1], flip_id)
+                    v2 = pack_data(x + 1, y + 1, z + 1, block_id, 2, ao[2], flip_id)
+                    v3 = pack_data(x + 1, y    , z + 1, block_id, 2, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v0, v1, v3, v1, v2)
@@ -342,14 +342,14 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v1, v2, v0, v2, v3)
 
                 # 左面
-                if is_void((x - 1, y, z), (wx - 1, wy, wz), world_voxels, voxel_id):
-                    ao = get_ao((x - 1, y, z), (wx - 1, wy, wz), world_voxels, 'X', voxel_id)
+                if is_void((x - 1, y, z), (wx - 1, wy, wz), world_blocks, block_id):
+                    ao = get_ao((x - 1, y, z), (wx - 1, wy, wz), world_blocks, 'X', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x, y    , z    , voxel_id, 3, ao[0], flip_id)
-                    v1 = pack_data(x, y + 1, z    , voxel_id, 3, ao[1], flip_id)
-                    v2 = pack_data(x, y + 1, z + 1, voxel_id, 3, ao[2], flip_id)
-                    v3 = pack_data(x, y    , z + 1, voxel_id, 3, ao[3], flip_id)
+                    v0 = pack_data(x, y    , z    , block_id, 3, ao[0], flip_id)
+                    v1 = pack_data(x, y + 1, z    , block_id, 3, ao[1], flip_id)
+                    v2 = pack_data(x, y + 1, z + 1, block_id, 3, ao[2], flip_id)
+                    v3 = pack_data(x, y    , z + 1, block_id, 3, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v1, v0, v3, v2, v1)
@@ -357,14 +357,14 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v2, v1, v0, v3, v2)
 
                 # 后面
-                if is_void((x, y, z - 1), (wx, wy, wz - 1), world_voxels, voxel_id):
-                    ao = get_ao((x, y, z - 1), (wx, wy, wz - 1), world_voxels, 'Z', voxel_id)
+                if is_void((x, y, z - 1), (wx, wy, wz - 1), world_blocks, block_id):
+                    ao = get_ao((x, y, z - 1), (wx, wy, wz - 1), world_blocks, 'Z', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x,     y,     z, voxel_id, 4, ao[0], flip_id)
-                    v1 = pack_data(x,     y + 1, z, voxel_id, 4, ao[1], flip_id)
-                    v2 = pack_data(x + 1, y + 1, z, voxel_id, 4, ao[2], flip_id)
-                    v3 = pack_data(x + 1, y,     z, voxel_id, 4, ao[3], flip_id)
+                    v0 = pack_data(x,     y,     z, block_id, 4, ao[0], flip_id)
+                    v1 = pack_data(x,     y + 1, z, block_id, 4, ao[1], flip_id)
+                    v2 = pack_data(x + 1, y + 1, z, block_id, 4, ao[2], flip_id)
+                    v3 = pack_data(x + 1, y,     z, block_id, 4, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v0, v1, v3, v1, v2)
@@ -372,14 +372,14 @@ def build_chunk_mesh(chunk_voxels, format_size, chunk_pos, world_voxels, transpa
                         index = add_data(vertex_data, index, v0, v1, v2, v0, v2, v3)
 
                 # 前面
-                if is_void((x, y, z + 1), (wx, wy, wz + 1), world_voxels, voxel_id):
-                    ao = get_ao((x, y, z + 1), (wx, wy, wz + 1), world_voxels, 'Z', voxel_id)
+                if is_void((x, y, z + 1), (wx, wy, wz + 1), world_blocks, block_id):
+                    ao = get_ao((x, y, z + 1), (wx, wy, wz + 1), world_blocks, 'Z', block_id)
                     flip_id = ao[1] + ao[3] > ao[0] + ao[2]
 
-                    v0 = pack_data(x    , y    , z + 1, voxel_id, 5, ao[0], flip_id)
-                    v1 = pack_data(x    , y + 1, z + 1, voxel_id, 5, ao[1], flip_id)
-                    v2 = pack_data(x + 1, y + 1, z + 1, voxel_id, 5, ao[2], flip_id)
-                    v3 = pack_data(x + 1, y    , z + 1, voxel_id, 5, ao[3], flip_id)
+                    v0 = pack_data(x    , y    , z + 1, block_id, 5, ao[0], flip_id)
+                    v1 = pack_data(x    , y + 1, z + 1, block_id, 5, ao[1], flip_id)
+                    v2 = pack_data(x + 1, y + 1, z + 1, block_id, 5, ao[2], flip_id)
+                    v3 = pack_data(x + 1, y    , z + 1, block_id, 5, ao[3], flip_id)
 
                     if flip_id:
                         index = add_data(vertex_data, index, v3, v1, v0, v3, v2, v1)

@@ -1,5 +1,5 @@
-from Settings import *
-from Frustum import Frustum
+from Constants import *
+
 
 class Camera:
     def __init__(self, position, yaw, pitch):
@@ -40,33 +40,67 @@ class Camera:
         self.yaw += delta_x
 
     def move_left(self, velocity):
-        leftaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position - self.right )- glm.ivec3(0, 1, 0))[0]
+        leftaabb = self.app.scene.get_block_id(glm.ivec3(self.position - self.right )- glm.ivec3(0, 1, 0))[0]
         if  leftaabb == VOID or leftaabb == WATER or leftaabb >= 45:
             self.position -= self.right * velocity
 
     def move_right(self, velocity):
-        rightaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position + self.right )- glm.ivec3(0, 1, 0))[0]
+        rightaabb = self.app.scene.get_block_id(glm.ivec3(self.position + self.right )- glm.ivec3(0, 1, 0))[0]
         if rightaabb == VOID or rightaabb == WATER or rightaabb >= 45:
             self.position += self.right * velocity
 
     def move_up(self, velocity):
-        upaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position))[0]
+        upaabb = self.app.scene.get_block_id(glm.ivec3(self.position))[0]
         if upaabb == VOID or upaabb == WATER or upaabb >= 45:
             self.position += glm.vec3(0, 1, 0) * 0.5 * 0.98
 
     def move_down(self, velocity):
-        downaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position - glm.vec3(0, 2, 0)))[0]
+        downaabb = self.app.scene.get_block_id(glm.ivec3(self.position - glm.vec3(0, 2, 0)))[0]
         if downaabb == VOID or downaabb == WATER or downaabb >= 45:
             self.position -= glm.vec3(0, 1, 0) * velocity * 10
 
     def move_forward(self, velocity):
-        forwardaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position + glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z))) - glm.ivec3(0, 1, 0))[0]
+        forwardaabb = self.app.scene.get_block_id(glm.ivec3(self.position + glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z))) - glm.ivec3(0, 1, 0))[0]
         if forwardaabb == VOID or forwardaabb == WATER or forwardaabb >= 45:
             self.position += glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z)) * velocity
 
 
     def move_back(self, velocity):
-        backaabb = self.app.scene.get_voxel_id(glm.ivec3(self.position - glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z))) - glm.ivec3(0, 1, 0))[0]
+        backaabb = self.app.scene.get_block_id(glm.ivec3(self.position - glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z))) - glm.ivec3(0, 1, 0))[0]
         if backaabb == VOID or backaabb == WATER or backaabb >= 45:
             self.position -= glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z)) * velocity
+
+
+class Frustum:
+    def __init__(self, camera):
+        self.camera = camera
+
+        self.factor_y = 1.0 / math.cos(V_FOV * 0.5)
+        self.tan_y = math.tan(V_FOV * 0.5)
+
+        self.factor_x = 1.0 / math.cos(H_FOV * 0.5)
+        self.tan_x = math.tan(H_FOV * 0.5)
+
+    def is_on_frustum(self, chunk):
+        # 球心距离向量
+        sphere_vec = chunk.center - self.camera.position
+
+        # 近远平面之外
+        sphere_z = glm.dot(sphere_vec, self.camera.forward)
+        if not (NEAR - CHUNK_SPHERE_RADIUS <= sphere_z <= FAR + CHUNK_SPHERE_RADIUS):
+            return False
+
+        # 上下
+        sphere_y = glm.dot(sphere_vec, self.camera.up)
+        dist_y = self.factor_y * CHUNK_SPHERE_RADIUS + sphere_z * self.tan_y
+        if not (-dist_y <= sphere_y <= dist_y):
+            return False
+
+        # 左右
+        sphere_x = glm.dot(sphere_vec, self.camera.right)
+        dist_x = self.factor_x * CHUNK_SPHERE_RADIUS + sphere_z * self.tan_x
+        if not (-dist_x <= sphere_x <= dist_x):
+            return False
+
+        return True
 

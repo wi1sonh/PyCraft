@@ -1,7 +1,7 @@
-from Settings import *
+from Constants import *
 from Meshes.Chunk_Mesh import ChunkMesh
 import random
-from Terrain_Gen import *
+from Terrain import *
 
 
 class Chunk:
@@ -10,7 +10,7 @@ class Chunk:
         self.world = world
         self.position = position
         self.m_model = self.get_model_matrix()
-        self.voxels: np.array = None
+        self.blocks: np.array = None
         self.mesh: ChunkMesh = None
         self.transparent_mesh: ChunkMesh = None
         self.is_empty = True
@@ -39,21 +39,21 @@ class Chunk:
             self.set_uniform()
             self.transparent_mesh.render()
 
-    def build_voxels(self):
+    def build_blocks(self):
         # empty chunk
-        voxels = np.zeros(CHUNK_VOL, dtype='uint8')
+        blocks = np.zeros(CHUNK_VOL, dtype='uint8')
 
         # fill chunk
         cx, cy, cz = glm.ivec3(self.position) * CHUNK_SIZE
-        self.generate_terrain(voxels, cx, cy, cz)
+        self.generate_terrain(blocks, cx, cy, cz)
 
-        if np.any(voxels):
+        if np.any(blocks):
             self.is_empty = False
-        return voxels
+        return blocks
 
     @staticmethod
     @njit
-    def generate_terrain(voxels, cx, cy, cz):
+    def generate_terrain(blocks, cx, cy, cz):
         for x in range(CHUNK_SIZE):
             for z in range(CHUNK_SIZE):
                 wx = x + cx
@@ -63,4 +63,4 @@ class Chunk:
 
                 for y in range(local_height):
                     wy = y + cy
-                    set_voxel_id(voxels, x, y, z, wx, wy, wz, world_height)
+                    set_block_id(blocks, x, y, z, wx, wy, wz, world_height)

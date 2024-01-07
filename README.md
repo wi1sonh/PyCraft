@@ -1,5 +1,5 @@
 # PyCraft
-A Minecraft like voxel game based only on PyGame and ModernGL
+A Minecraft like block game based only on PyGame and ModernGL
 
 ![version](https://img.shields.io/badge/Version-1.0-green)
 ![engine](https://img.shields.io/badge/Engine-Python-yellow)

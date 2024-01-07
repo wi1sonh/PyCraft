@@ -1,4 +1,4 @@
-from Settings import *
+from Constants import *
 
 # 用于初始化以及更新可编程渲染管线的相关参数
 class ShaderProgram:
@@ -9,10 +9,10 @@ class ShaderProgram:
 
         #---------shaders-------------#
         self.chunk        = self.get_program(shader_name='Chunk')
-        self.voxel_marker = self.get_program(shader_name='Voxel_Marker')
+        self.block_marker = self.get_program(shader_name='BlockMarker')
         self.quad         = self.get_program(shader_name='Quad')
         self.hotbar       = self.get_program(shader_name='Hotbar')
-        self.hotbar_icon  = self.get_program(shader_name='Hotbar_Icon')
+        self.hotbar_icon  = self.get_program(shader_name='HotbarIcon')
         self.inventory    = self.get_program(shader_name='Inventory')
         self.underwater   = self.get_program(shader_name='Underwater')
         self.clouds       = self.get_program(shader_name='Clouds')
@@ -27,13 +27,13 @@ class ShaderProgram:
     def set_uniforms_on_init(self):
 
         # 用于定位方块的方框
-        self.voxel_marker['m_proj'].write(self.player.m_proj)
-        self.voxel_marker['m_model'].write(glm.mat4())
-        self.voxel_marker['u_texture_0'] = 0
+        self.block_marker['m_proj'].write(self.player.m_proj)
+        self.block_marker['m_model'].write(glm.mat4())
+        self.block_marker['u_texture_0'] = 0
         # 区块
         self.chunk['m_proj'].write(self.player.m_proj)
-        self.chunk['bg_color'].write(BG_COLOR)
         self.chunk['m_model'].write(glm.mat4())
+        self.chunk['u_bg_color'].write(BG_COLOR)
         self.chunk['u_texture_array_0'] = 1
         # 准星
         self.quad['u_texture_0'] = 2
@@ -51,14 +51,14 @@ class ShaderProgram:
         self.select['u_texture_0'] = 8
         # 云
         self.clouds['m_proj'].write(self.player.m_proj)
-        self.clouds['center'] = CENTER_XZ
-        self.clouds['bg_color'].write(BG_COLOR)
-        self.clouds['cloud_scale'] = CLOUD_SCALE
+        self.clouds['u_center'] = CENTER_XZ
+        self.clouds['u_bg_color'].write(BG_COLOR)
+        self.clouds['u_cloud_scale'] = 25
 
     # 需要实时更新给可编程渲染管线的参数, 即玩家的观察视角
     def update(self):
         self.chunk['m_view'].write(self.player.m_view)
-        self.voxel_marker['m_view'].write(self.player.m_view)
+        self.block_marker['m_view'].write(self.player.m_view)
         self.clouds['m_view'].write(self.player.m_view)
 
     # 获取可编程渲染管线的文件内容
