@@ -2,6 +2,7 @@ from Constants import *
 from Meshes.Base_Mesh import BaseMesh
 from array import array
 
+# 底下物品栏的物品图标
 class HotBarIconMesh(BaseMesh):
     def __init__(self, app, x=0, y=-0.85):
         super().__init__()

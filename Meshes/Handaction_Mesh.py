@@ -1,6 +1,7 @@
 from Constants import *
 from Meshes.Base_Mesh import BaseMesh
 
+# 手部动作
 class HandactionMesh(BaseMesh):
     def __init__(self, app):
         super().__init__()

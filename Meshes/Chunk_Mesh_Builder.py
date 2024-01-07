@@ -1,12 +1,17 @@
-from Constants import *
+from Constants import * # 导入常量
 from numba import uint8, njit
+# 使用Numba的装饰器njit进行函数优化，提高性能
 
+# 使用Numba进行编译优化
 @njit
 def get_ao(local_pos, world_pos, world_blocks, plane, block_id):
-    x, y, z = local_pos
-    wx, wy, wz = world_pos
+    x, y, z = local_pos  # 获取本地坐标
+    wx, wy, wz = world_pos   # 获取世界坐标
 
+    # 根据不同平面进行周围方块的判断
+    # Y平面
     if plane == 'Y':
+
         a = is_void((x, y, z - 1), (wx, wy, wz - 1), world_blocks, block_id)
         b = is_void((x - 1, y, z -1),(wx -1, wy, wz - 1), world_blocks, block_id)
         c = is_void((x - 1, y, z), (wx - 1, wy, wz), world_blocks, block_id)
@@ -39,11 +44,14 @@ def get_ao(local_pos, world_pos, world_blocks, plane, block_id):
     ao = (a + b + c), (g + h + a), (e + f + g), (c + d + e)
     return ao
 
+# pack_data函数将坐标、方块ID等数据打包成一个整数以进行高效处理
 @njit
 def pack_data(x, y, z, block_id, face_id, ao_id, flip_id):
     # x: 6bit y: 6bit z:6bit block_id: 8bit face_id: 3bit ao_id: 2bit flip_id: 1bit
+    # 将各数据位数存储
     a, b, c, d, e, f, g = x, y, z, block_id, face_id, ao_id, flip_id
 
+    # 各数据位数长度
     b_bit, c_bit, d_bit, e_bit, f_bit, g_bit = 6, 6, 8, 3, 2, 1
     fg_bit = f_bit + g_bit
     efg_bit = e_bit +fg_bit
@@ -51,6 +59,7 @@ def pack_data(x, y, z, block_id, face_id, ao_id, flip_id):
     cdefg_bit = c_bit + defg_bit
     bcdefg_bit = b_bit + cdefg_bit
 
+    # 整合数据并返回
     packed_data = (
         a << bcdefg_bit |
         b << cdefg_bit |
@@ -79,6 +88,7 @@ def get_chunk_index(world_block_pos):  # 接受一个包含世界空间中位置
     index = cx + WORLD_W * cz + WORLD_AREA * cy
     return index
 
+# 判断方块是否为空气或透明，用于渲染的逻辑中进行了多种类型方块的判断
 @njit
 def is_void(local_block_pos, world_block_pos, world_blocks, block_id):
    chunk_index = get_chunk_index(world_block_pos)
@@ -92,60 +102,43 @@ def is_void(local_block_pos, world_block_pos, world_blocks, block_id):
     # Transparent Single Blocks
    if block_id != WATER and chunk_blocks[block_index] == WATER:
        return True
-
    if block_id != GLASS and chunk_blocks[block_index] == GLASS:
        return True
 
-#    for block_type in TRANSPARENT_BLOCKS_SINGLE:
-#        if block_id != block_type and chunk_blocks[block_index] == block_type:
-#            return True
-
-#    for block_type in TRANSPARENT_BLOCKS:
-#     if chunk_blocks[block_index] == block_type:
-#         return True
-
    if chunk_blocks[block_index] == LEAVES:
        return True
-
    if chunk_blocks[block_index] == RED_TULIP:
        return True
-
    if chunk_blocks[block_index] == WHITE_TULIP:
        return True
-
    if chunk_blocks[block_index] == PINK_TULIP:
        return True
-
    if chunk_blocks[block_index] == PEONY:
        return True
-
    if chunk_blocks[block_index] == ORANGE_TULIP:
        return True
-
    if chunk_blocks[block_index] == RED_MUSHROOM:
        return True
-
    if chunk_blocks[block_index] == DANDELION:
        return True
-
    if chunk_blocks[block_index] == SHORT_GRASS:
        return True
-
    if chunk_blocks[block_index] == TALL_GRASS:
        return True
-
    if chunk_blocks[block_index]:
        return False
 
    return True
 
+# add_data函数将顶点数据添加到顶点数组中
 @njit
 def add_data(vertex_data, index, *vertices):
     for vertex in vertices:
-        vertex_data[index] = vertex
+        vertex_data[index] = vertex # 将顶点数据添加到顶点数组中
         index += 1
     return index
 
+# build_chunk_mesh函数根据方块数据构建块的网格，用于渲染世界
 @njit
 def build_chunk_mesh(chunk_blocks, format_size, chunk_pos, world_blocks, transparent=False):
     vertex_data = np.empty(CHUNK_VOL * 18 * format_size, dtype='uint32')
@@ -156,16 +149,11 @@ def build_chunk_mesh(chunk_blocks, format_size, chunk_pos, world_blocks, transpa
             for z in range(CHUNK_SIZE):
                 block_id = chunk_blocks[x + CHUNK_SIZE * z + CHUNK_AREA * y]
 
-                if not block_id:
+                if not block_id:   # 如果块为空，则跳过
                     continue
 
                 if not transparent:
-                    # for block_type in TRANSPARENT_BLOCKS:
-                    #     if block_id == block_type:
-                    #         continue
-                    # for block_type in TRANSPARENT_BLOCKS_SINGLE:
-                    #     if block_id == block_type:
-                    #         continue
+                     # 根据块ID判断是否为透明块，若是则跳过
                     if block_id == WATER:
                         continue
                     if block_id == LEAVES:
@@ -191,15 +179,10 @@ def build_chunk_mesh(chunk_blocks, format_size, chunk_pos, world_blocks, transpa
                     if block_id == TALL_GRASS:
                         continue
 
-
+                  # 根据块ID判断是否为可渲染的透明块，若不是则跳过
                 if transparent:
                     can_render = False
-                    # for block_type in TRANSPARENT_BLOCKS:
-                    #     if block_id == block_type:
-                    #         can_render = True
-                    # for block_type in TRANSPARENT_BLOCKS_SINGLE:
-                    #     if block_id == block_type:
-                    #         can_render = True
+
                     if block_id == WATER:
                         can_render = True
                     if block_id == LEAVES:
@@ -228,7 +211,7 @@ def build_chunk_mesh(chunk_blocks, format_size, chunk_pos, world_blocks, transpa
                     if can_render != True:
                         continue
 
-                # block world position
+                # 方块的世界坐标
                 cx, cy, cz = chunk_pos
                 wx = x + cx * CHUNK_SIZE
                 wz = z + cz * CHUNK_SIZE
@@ -386,4 +369,4 @@ def build_chunk_mesh(chunk_blocks, format_size, chunk_pos, world_blocks, transpa
                     else:
                         index = add_data(vertex_data, index, v0, v2, v1, v0, v3, v2)
 
-    return vertex_data[:index + 1]
+    return vertex_data[:index + 1]  # 返回构建好的顶点数据数组

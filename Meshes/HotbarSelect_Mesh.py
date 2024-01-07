@@ -2,6 +2,7 @@ from Constants import *
 from Meshes.Base_Mesh import BaseMesh
 from array import array
 
+# 底下物品栏选择框
 class Select(BaseMesh):
     def __init__(self, app, x=0):
         super().__init__()

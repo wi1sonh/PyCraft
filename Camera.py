@@ -39,32 +39,37 @@ class Camera:
     def rotate_yaw(self, delta_x):
         self.yaw += delta_x
 
+    # 左移
     def move_left(self, velocity):
         leftaabb = self.app.scene.get_block_id(glm.ivec3(self.position - self.right )- glm.ivec3(0, 1, 0))[0]
         if  leftaabb == VOID or leftaabb == WATER or leftaabb >= 45:
             self.position -= self.right * velocity
 
+    # 右移
     def move_right(self, velocity):
         rightaabb = self.app.scene.get_block_id(glm.ivec3(self.position + self.right )- glm.ivec3(0, 1, 0))[0]
         if rightaabb == VOID or rightaabb == WATER or rightaabb >= 45:
             self.position += self.right * velocity
 
+    # 跳跃(起飞)
     def move_up(self, velocity):
         upaabb = self.app.scene.get_block_id(glm.ivec3(self.position))[0]
         if upaabb == VOID or upaabb == WATER or upaabb >= 45:
-            self.position += glm.vec3(0, 1, 0) * 0.5 * 0.98
+            self.position += glm.vec3(0, 1, 0) * 0.05 * 0.98
 
+    # 下降
     def move_down(self, velocity):
         downaabb = self.app.scene.get_block_id(glm.ivec3(self.position - glm.vec3(0, 2, 0)))[0]
         if downaabb == VOID or downaabb == WATER or downaabb >= 45:
             self.position -= glm.vec3(0, 1, 0) * velocity * 10
 
+    # 前进
     def move_forward(self, velocity):
         forwardaabb = self.app.scene.get_block_id(glm.ivec3(self.position + glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z))) - glm.ivec3(0, 1, 0))[0]
         if forwardaabb == VOID or forwardaabb == WATER or forwardaabb >= 45:
             self.position += glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z)) * velocity
 
-
+    # 后退
     def move_back(self, velocity):
         backaabb = self.app.scene.get_block_id(glm.ivec3(self.position - glm.normalize(glm.vec3(self.forward.x, 0, self.forward.z))) - glm.ivec3(0, 1, 0))[0]
         if backaabb == VOID or backaabb == WATER or backaabb >= 45:

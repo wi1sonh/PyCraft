@@ -45,7 +45,7 @@ class Scene:
             #     # self.app.player.position.x = self.app.player.position.x - 2
             #     self.initpos = 1
             # else:
-            self.app.player.position.y = self.app.player.position.y - 0.002 * 0.98  # 伪重力
+            self.app.player.position.y = self.app.player.position.y - 0.02 * 0.98  # 伪重力
         if block_id[0] == WATER:
             self.app.player.position.y = self.app.player.position.y - 0.003
         # elif self.app.player.position.y != int(self.app.player.position.y+1):

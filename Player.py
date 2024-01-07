@@ -13,31 +13,15 @@ class Player(Camera):
     def __init__(self, app, position=PLAYER_POS, yaw=-90, pitch=0):
         self.app = app
         super().__init__(position, yaw, pitch)
-        #self.underwater_mesh = UnderwaterMesh(app)
         self.open_inventory = False
         self.underwater = False
         self.vel = PLAYER_SPEED
         self.action = 0
-        # if self.app.scene:
-        #     self.chunks = self.app.scene.world.chunks
-
 
     def update(self, pg):
         self.keyboard_controls()
         self.mouse_control(pg)
         super().update()
-
-        # player_pos = glm.ivec3(int(self.position.x),int(self.position.y), int(self.position.z))
-        # block_id = self.get_block_id(player_pos)
-
-        # if self.chunks:
-        # block_type = self.get_block_id(self.position)
-        # print("Block Type: ", block_type)
-
-        # if block_type[0] == VOID:
-        #     self.position.y = self.position.y - 0.5
-        # else:
-        #     self.app.player.underwater = False
 
     def render(self):
         pass
@@ -125,15 +109,12 @@ class Player(Camera):
 
         # 鼠标滚轮切换物品
         if event.type == pg.MOUSEWHEEL:
-            # print(event.x, event.y)
             if event.y == 1:
-                # block_handler.set_block_id(block_handler.new_block_id + 1)
                 self.app.scene.hotbar.select -= 1
                 if self.app.scene.hotbar.select == 0:
                     self.app.scene.hotbar.select = 9
 
             if event.y == -1:
-                # block_handler.set_block_id(block_handler.new_block_id - 1)
                 self.app.scene.hotbar.select += 1
                 if self.app.scene.hotbar.select == 10:
                     self.app.scene.hotbar.select = 1

@@ -1,6 +1,7 @@
 from Constants import *
 from Meshes.Base_Mesh import BaseMesh
 
+# 手
 class HandMesh(BaseMesh):
     def __init__(self, app):
         super().__init__() # 调用父类的构造函数，以初始化基类

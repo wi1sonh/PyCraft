@@ -2,6 +2,7 @@ from Constants import SEED
 from numba import njit
 from opensimplex.internals import _noise2, _noise3, _init
 
+# 调库实现柏林噪声
 perm, perm_grad_index3 = _init(seed=SEED)
 
 @njit(cache=True)

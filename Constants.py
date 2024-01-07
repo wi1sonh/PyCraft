@@ -5,7 +5,7 @@ import random
 
 # OpenGL 参数
 NUM_SAMPLES = 16 # 反走样
-WIN_RES = glm.vec2(1280, 720)
+WIN_RES = glm.vec2(1280, 720)  # 窗口分辨率
 
 
 # 相机参数

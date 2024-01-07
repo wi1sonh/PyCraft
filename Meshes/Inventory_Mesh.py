@@ -2,6 +2,7 @@ from Constants import *
 from Meshes.Base_Mesh import BaseMesh
 from array import array
 
+# 背包物品栏
 class InventoryMesh(BaseMesh):
     def __init__(self, app):
         super().__init__()
