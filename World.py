@@ -1,15 +1,15 @@
-from Settings import *
-from World_Objects.Chunk import Chunk
-from Voxel_Handler import VoxelHandler
+from Constants import *
+from Chunk import Chunk
+from Interact import BlockHandler
 
 class World:
     def __init__(self, app):
         self.app = app
         self.chunks = [None for _ in range(WORLD_VOL)]
-        self.voxels = np.empty([WORLD_VOL, CHUNK_VOL], dtype='uint8')
+        self.blocks = np.empty([WORLD_VOL, CHUNK_VOL], dtype='uint8')
         self.build_chunks()
         self.build_chunk_mesh()
-        self.voxel_handler = VoxelHandler(self)
+        self.block_handler = BlockHandler(self)
 
     def build_chunks(self):
         for x in range(WORLD_W):
@@ -20,18 +20,18 @@ class World:
                     chunk_index = x + WORLD_W * z + WORLD_AREA * y
                     self.chunks[chunk_index] = chunk
 
-                    # put the chunk voxels in a separate array
-                    self.voxels[chunk_index] = chunk.build_voxels()
+                    # put the chunk blocks in a separate array
+                    self.blocks[chunk_index] = chunk.build_blocks()
 
-                    # get pointer to voxels
-                    chunk.voxels = self.voxels[chunk_index]
+                    # get pointer to blocks
+                    chunk.blocks = self.blocks[chunk_index]
 
     def build_chunk_mesh(self):
         for chunk in self.chunks:
             chunk.build_mesh()
 
     def update(self):
-        self.voxel_handler.update()
+        self.block_handler.update()
 
     def render(self):
         for chunk in self.chunks:

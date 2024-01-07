@@ -1,11 +1,11 @@
-from Settings import *
-from World_Objects.Icon import Icon
+from Constants import *
+from Flat.Icon import Icon
 from Meshes.Inventory_Mesh import InventoryMesh
 
 class Inventory:
-    def __init__(self, voxel_handler):
-        self.app = voxel_handler.app
-        self.handler = voxel_handler
+    def __init__(self, block_handler):
+        self.app = block_handler.app
+        self.handler = block_handler
         self.block_icons = []
         self.inventory_mesh = InventoryMesh(self.app)
         self.init_icons()
@@ -13,7 +13,7 @@ class Inventory:
 
     def init_icons(self):
         for i in range(1, NUM_BLOCKS + 1):
-            self.block_icons.append(Icon(self.handler, voxel_id=i, vertical=0))
+            self.block_icons.append(Icon(self.handler, block_id=i, vertical=0))
 
     def update(self):
         pass

@@ -1,4 +1,4 @@
-from Settings import *
+from Constants import *
 from Meshes.Base_Mesh import BaseMesh
 from array import array
 

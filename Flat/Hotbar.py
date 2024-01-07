@@ -1,12 +1,12 @@
-from Settings import *
+from Constants import *
 from Meshes.Hotbar_Mesh import HotBarMesh
 from Meshes.HotbarSelect_Mesh import Select
 from Meshes.Hotbar_Icon_Mesh import HotBarIconMesh
 
 class Hotbar:
-    def __init__(self, voxel_handler):
-        self.app = voxel_handler.app
-        self.handler = voxel_handler
+    def __init__(self, block_handler):
+        self.app = block_handler.app
+        self.handler = block_handler
         self.hotbar_mesh = HotBarMesh(self.app)
 
         self.hotbarselect1 = Select(self.app)
@@ -48,83 +48,83 @@ class Hotbar:
         # print(self.handler.select)
 
         if self.select == 1:
-            self.hotbar_icon1.program['voxel_id'] = self.handler.new_voxel_id
-            self.last1 = self.handler.new_voxel_id
+            self.hotbar_icon1.program['block_id'] = self.handler.new_block_id
+            self.last1 = self.handler.new_block_id
         else:
-            self.hotbar_icon1.program['voxel_id'] = self.last1
+            self.hotbar_icon1.program['block_id'] = self.last1
         self.hotbar_icon1.render()
         if self.select == 1:
             self.hotbarselect1.render()
 
 
         if self.select == 2:
-            self.hotbar_icon2.program['voxel_id'] = self.handler.new_voxel_id
-            self.last2 = self.handler.new_voxel_id
+            self.hotbar_icon2.program['block_id'] = self.handler.new_block_id
+            self.last2 = self.handler.new_block_id
         else:
-            self.hotbar_icon2.program['voxel_id'] = self.last2
+            self.hotbar_icon2.program['block_id'] = self.last2
         self.hotbar_icon2.render()
         if self.select == 2:
             self.hotbarselect2.render()
 
         if self.select == 3:
-            self.hotbar_icon3.program['voxel_id'] = self.handler.new_voxel_id
-            self.last3 = self.handler.new_voxel_id
+            self.hotbar_icon3.program['block_id'] = self.handler.new_block_id
+            self.last3 = self.handler.new_block_id
         else:
-            self.hotbar_icon3.program['voxel_id'] = self.last3
+            self.hotbar_icon3.program['block_id'] = self.last3
         self.hotbar_icon3.render()
         if self.select == 3:
             self.hotbarselect3.render()
 
         if self.select == 4:
-            self.hotbar_icon4.program['voxel_id'] = self.handler.new_voxel_id
-            self.last4 = self.handler.new_voxel_id
+            self.hotbar_icon4.program['block_id'] = self.handler.new_block_id
+            self.last4 = self.handler.new_block_id
         else:
-            self.hotbar_icon4.program['voxel_id'] = self.last4
+            self.hotbar_icon4.program['block_id'] = self.last4
         self.hotbar_icon4.render()
         if self.select == 4:
             self.hotbarselect4.render()
 
         if self.select == 5:
-            self.hotbar_icon5.program['voxel_id'] = self.handler.new_voxel_id
-            self.last5 = self.handler.new_voxel_id
+            self.hotbar_icon5.program['block_id'] = self.handler.new_block_id
+            self.last5 = self.handler.new_block_id
         else:
-            self.hotbar_icon5.program['voxel_id'] = self.last5
+            self.hotbar_icon5.program['block_id'] = self.last5
         self.hotbar_icon5.render()
         if self.select == 5:
             self.hotbarselect5.render()
 
         if self.select == 6:
-            self.hotbar_icon6.program['voxel_id'] = self.handler.new_voxel_id
-            self.last6 = self.handler.new_voxel_id
+            self.hotbar_icon6.program['block_id'] = self.handler.new_block_id
+            self.last6 = self.handler.new_block_id
         else:
-            self.hotbar_icon6.program['voxel_id'] = self.last6
+            self.hotbar_icon6.program['block_id'] = self.last6
         self.hotbar_icon6.render()
         if self.select == 6:
             self.hotbarselect6.render()
 
         if self.select == 7:
-            self.hotbar_icon7.program['voxel_id'] = self.handler.new_voxel_id
-            self.last7 = self.handler.new_voxel_id
+            self.hotbar_icon7.program['block_id'] = self.handler.new_block_id
+            self.last7 = self.handler.new_block_id
         else:
-            self.hotbar_icon7.program['voxel_id'] = self.last7
+            self.hotbar_icon7.program['block_id'] = self.last7
         self.hotbar_icon7.render()
         if self.select == 7:
             self.hotbarselect7.render()
 
         if self.select == 8:
-            self.hotbar_icon8.program['voxel_id'] = self.handler.new_voxel_id
-            self.last8 = self.handler.new_voxel_id
+            self.hotbar_icon8.program['block_id'] = self.handler.new_block_id
+            self.last8 = self.handler.new_block_id
         else:
-            self.hotbar_icon8.program['voxel_id'] = self.last8
+            self.hotbar_icon8.program['block_id'] = self.last8
         self.hotbar_icon8.render()
         if self.select == 8:
             self.hotbarselect8.render()
 
         if self.select == 9:
-            self.hotbar_icon9.program['voxel_id'] = self.handler.new_voxel_id
-            self.last9 = self.handler.new_voxel_id
+            self.hotbar_icon9.program['block_id'] = self.handler.new_block_id
+            self.last9 = self.handler.new_block_id
         else:
-            self.hotbar_icon9.program['voxel_id'] = self.last9
+            self.hotbar_icon9.program['block_id'] = self.last9
         self.hotbar_icon9.render()
         if self.select == 9:
             self.hotbarselect9.render()

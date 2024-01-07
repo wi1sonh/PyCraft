@@ -2,45 +2,50 @@
 
 layout (location = 0) out vec4 fragColor;
 
-const vec3 gamma = vec3(2.2);
-const vec3 inv_gamma = 1 / gamma;
-uniform vec3 bg_color;
+const vec3 GAMMA = vec3(2.2);
+const vec3 GAMMA_INV = 1 / GAMMA;
+const vec3 WATER_COLOR = vec3(0.0, 0.3, 1.0);
+
+const float FADING_FACTOR = -0.00001;  // fading 
 
 uniform sampler2DArray u_texture_array_0;
+uniform vec3 u_bg_color;
 
-in vec3 voxel_color;
+in vec3 block_color;
 in vec2 uv;
 in float shading;
 
 flat in int face_id;
-flat in int voxel_id;
+flat in int block_id;
+
 
 void main(){
     vec2 face_uv = uv;
     face_uv.x = uv.x / 3.0 - min(face_id, 2) / 3.0;
+    vec3 tex_color = texture(u_texture_array_0, vec3(face_uv, block_id)).rgb;
 
-    vec3 tex_col = texture(u_texture_array_0, vec3(face_uv, voxel_id)).rgb;
-    tex_col = pow(tex_col, gamma);
-    vec3 tex_col_flat = tex_col;
+    // gamma correction
+    tex_color = pow(tex_color, GAMMA);
 
-    tex_col *= shading;
+    vec3 tex_color_flat = tex_color;
 
-    tex_col_flat = pow(tex_col, inv_gamma);
+    tex_color *= shading;
 
-    //fog
-    float fog_dist = gl_FragCoord.z / gl_FragCoord.w;
-    tex_col = mix(tex_col, bg_color, (1.0 - exp2(-0.00001 * fog_dist * fog_dist)));
+    // inverse gamma correction 1
+    tex_color_flat = pow(tex_color, GAMMA_INV);
 
-    tex_col = pow(tex_col, inv_gamma);
+    // fog fading
+    float dist = gl_FragCoord.z / gl_FragCoord.w;
+    tex_color = mix(tex_color, u_bg_color, (1.0 - exp2(FADING_FACTOR * dist * dist)));
 
-    fragColor = vec4(tex_col, 1);
+    // inverse gamma correction 2
+    tex_color = pow(tex_color, GAMMA_INV);
 
-    vec4 fragFlatColor = vec4(tex_col_flat, 1);
+    fragColor = vec4(tex_color, 1);
+    vec4 fragFlatColor = vec4(tex_color_flat, 1);
     fragColor.a = (fragFlatColor.r + fragFlatColor.b + fragFlatColor.g <= 0.1) ? 0.0: 1.0;
 
-    if (voxel_id == 8){
+    if (block_id == 8){
         fragColor.a = 0.5;
     }
-
-
 }

@@ -1,11 +1,11 @@
-from Settings import *
+from Constants import *
 from Meshes.Hand_Mesh import HandMesh
 from Meshes.Handaction_Mesh import HandactionMesh
 
 class Hand:
-    def __init__(self, voxel_handler):
-        self.app = voxel_handler.app
-        self.handler = voxel_handler
+    def __init__(self, block_handler):
+        self.app = block_handler.app
+        self.handler = block_handler
 
         self.handm = HandMesh(self.app)
         self.handaction = HandactionMesh(self.app)

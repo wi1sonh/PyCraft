@@ -1,4 +1,4 @@
-from Settings import *
+from Constants import *
 import moderngl as mgl
 import pygame as pg
 import sys
@@ -7,7 +7,7 @@ from Scene import Scene
 from Player import Player
 from Textures import Textures
 
-class VoxelEngine:
+class BlockEngine:
     def __init__(self):
         pg.init()
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
@@ -88,5 +88,5 @@ class VoxelEngine:
         sys.exit()
 
 if __name__ == '__main__':
-    app = VoxelEngine()
+    app = BlockEngine()
     app.run()

@@ -1,8 +1,19 @@
 from Noise import noise2, noise3
-from Settings import *
+from Constants import *
 from numba import njit
 from random import random
 from random import randint
+
+# 树生成参数
+TREE_PROBABILITY = 0.02
+TREE_WIDTH, TREE_HEIGHT = 4, 8
+TREE_H_WIDTH, TREE_H_HEIGHT = TREE_WIDTH // 2, TREE_HEIGHT // 2
+
+# 地形生成概率
+PUMPKIN_PROBABILITY  = 0.002
+FLOWER_PROBABILITY   = 0.05
+MUSHROOM_PROBABILITY = 0.01
+SHRUB_PROBABILITY    = 0.3
 
 
 @njit
@@ -37,92 +48,92 @@ def get_index(x, y, z):
     return x + CHUNK_SIZE * z + CHUNK_AREA * y
 
 @njit
-def set_voxel_id(voxels, x, y, z, wx, wy, wz, world_height):
-    voxel_id = 0
+def set_block_id(blocks, x, y, z, wx, wy, wz, world_height):
+    block_id = 0
 
     if wy < world_height - 1:
         # 创建洞穴
         if (noise3(wx * 0.09, wy * 0.09, wz * 0.09) > 0 and noise2(wx * 0.1, wz * 0.1) * 3 + 3 < wy < world_height - 10):
-            voxel_id = 0
+            block_id = 0
         else:
-            voxel_id = STONE
+            block_id = STONE
     elif wy == world_height - 1:
         rng = int(7 * random())
         ry = wy - rng
         if SNOW_LVL <= ry < world_height:
-            voxel_id = SNOWY_GRASS
+            block_id = SNOWY_GRASS
 
         elif STONE_LVL <= ry < SNOW_LVL:
-            voxel_id = STONE
+            block_id = STONE
 
         elif DIRT_LVL <= ry < STONE_LVL:
-            voxel_id = DIRT
+            block_id = DIRT
 
         elif GRASS_LVL <= ry < DIRT_LVL:
-            voxel_id = GRASS
+            block_id = GRASS
 
         else:
-            voxel_id = SAND
+            block_id = SAND
 
-    voxels[get_index(x, y, z)] = voxel_id
+    blocks[get_index(x, y, z)] = block_id
 
     # 放置树
     if wy < DIRT_LVL:
-        place_tree(voxels, x, y, z, voxel_id)
+        place_tree(blocks, x, y, z, block_id)
 
     if wy < DIRT_LVL:
-        place_pumpkins(voxels, x, y, z, voxel_id)
+        place_pumpkins(blocks, x, y, z, block_id)
 
     if wy < DIRT_LVL:
-        place_melons(voxels, x, y, z, voxel_id)
+        place_melons(blocks, x, y, z, block_id)
 
     if wy < DIRT_LVL:
-        place_flowers(voxels, x, y, z, voxel_id)
+        place_flowers(blocks, x, y, z, block_id)
 
     if wy < DIRT_LVL:
-        place_shrubs(voxels, x, y, z, voxel_id)
+        place_shrubs(blocks, x, y, z, block_id)
 
     # 放置水
-    if wy < WATER_LVL:
-        water_height = WATER_LVL - wy
+    if wy < SEA_LVL:
+        water_height = SEA_LVL - wy
         for iy in range(1, water_height):
-            voxels[get_index(x, y + iy, z)] = WATER
+            blocks[get_index(x, y + iy, z)] = WATER
 
 @njit
-def place_pumpkins(voxels, x, y, z, voxel_id):
+def place_pumpkins(blocks, x, y, z, block_id):
     rnd = random()
-    if voxel_id != GRASS or rnd > PUMPKIN_PROBABILITY:
+    if block_id != GRASS or rnd > PUMPKIN_PROBABILITY:
         return None
-    if voxels[get_index(x, y + 1, z)] != VOID:
+    if blocks[get_index(x, y + 1, z)] != VOID:
         return None
 
-    voxels[get_index(x, y, z)] = DIRT
+    blocks[get_index(x, y, z)] = DIRT
 
     # 南瓜
-    voxels[get_index(x, y + 1, z)] = PUMPKIN
+    blocks[get_index(x, y + 1, z)] = PUMPKIN
 
 @njit
-def place_melons(voxels, x, y, z, voxel_id):
+def place_melons(blocks, x, y, z, block_id):
     rnd = random()
-    if voxel_id != GRASS or rnd > PUMPKIN_PROBABILITY:
+    if block_id != GRASS or rnd > PUMPKIN_PROBABILITY:
         return None
-    if voxels[get_index(x, y + 1, z)] != VOID:
+    if blocks[get_index(x, y + 1, z)] != VOID:
         return None
 
-    voxels[get_index(x, y, z)] = DIRT
+    blocks[get_index(x, y, z)] = DIRT
 
     # 西瓜
-    voxels[get_index(x, y + 1, z)] = MELON
+    blocks[get_index(x, y + 1, z)] = MELON
 
 @njit
-def place_shrubs(voxels, x, y, z, voxel_id):
+def place_shrubs(blocks, x, y, z, block_id):
     rnd = random()
-    if voxel_id != GRASS or rnd > SHRUB_PROBABILITY:
+    if block_id != GRASS or rnd > SHRUB_PROBABILITY:
         return None
-    if voxels[get_index(x, y + 1, z)] != VOID:
+    if blocks[get_index(x, y + 1, z)] != VOID:
         return None
 
-    voxels[get_index(x, y, z)] = GRASS
+    blocks[get_index(x, y, z)] = GRASS
 
     grass_type = SHORT_GRASS
     rnd = math.ceil(random() * 10)
@@ -130,17 +141,17 @@ def place_shrubs(voxels, x, y, z, voxel_id):
         grass_type = TALL_GRASS
 
     # 草
-    voxels[get_index(x, y + 1, z)] = grass_type
+    blocks[get_index(x, y + 1, z)] = grass_type
 
 @njit
-def place_flowers(voxels, x, y, z, voxel_id):
+def place_flowers(blocks, x, y, z, block_id):
     rnd = random()
-    if voxel_id != GRASS or rnd > FLOWER_PROBABILITY:
+    if block_id != GRASS or rnd > FLOWER_PROBABILITY:
         return None
-    if voxels[get_index(x, y + 1, z)] != VOID:
+    if blocks[get_index(x, y + 1, z)] != VOID:
         return None
 
-    voxels[get_index(x, y, z)] = GRASS
+    blocks[get_index(x, y, z)] = GRASS
 
     flower_type = RED_TULIP
     rnd = math.ceil(random() * 7);
@@ -160,13 +171,13 @@ def place_flowers(voxels, x, y, z, voxel_id):
         flower_type = RED_MUSHROOM
 
     # 花
-    voxels[get_index(x, y + 1, z)] = flower_type
+    blocks[get_index(x, y + 1, z)] = flower_type
 
 
 @njit
-def place_tree(voxels, x, y, z, voxel_id):
+def place_tree(blocks, x, y, z, block_id):
     rnd = random()
-    if voxel_id != GRASS or rnd > TREE_PROBABILITY:
+    if block_id != GRASS or rnd > TREE_PROBABILITY:
         return None
     if y + TREE_HEIGHT >= CHUNK_SIZE:
         return None
@@ -176,7 +187,7 @@ def place_tree(voxels, x, y, z, voxel_id):
         return None
 
     # 树下面放土
-    voxels[get_index(x, y, z)] = DIRT
+    blocks[get_index(x, y, z)] = DIRT
 
     # 叶子
     tree_height=TREE_HEIGHT-randint(0,2)
@@ -188,16 +199,16 @@ def place_tree(voxels, x, y, z, voxel_id):
         for ix in range(-TREE_H_WIDTH + m, TREE_H_WIDTH - m * rng):
             for iz in range(-TREE_H_WIDTH + m * rng, TREE_H_WIDTH - m):
                 if (ix + iz) % 4:
-                    voxels[get_index(x + ix + k, y + iy, z + iz + k)] = LEAVES
+                    blocks[get_index(x + ix + k, y + iy, z + iz + k)] = LEAVES
         m += 1 if n > 0 else 3 if n > 1 else 0
 
     # 树干
     tree_type = random()
     for iy in range(1, tree_height - 2):
         if tree_type > 0.5:
-            voxels[get_index(x, y + iy, z)] = OAK_WOOD
+            blocks[get_index(x, y + iy, z)] = OAK_WOOD
         elif tree_type <= 0.5:
-            voxels[get_index(x, y + iy, z)] = BIRCH_WOOD
+            blocks[get_index(x, y + iy, z)] = BIRCH_WOOD
 
     # top
-    voxels[get_index(x, y + tree_height - 2, z)] = LEAVES
+    blocks[get_index(x, y + tree_height - 2, z)] = LEAVES

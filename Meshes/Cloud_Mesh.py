@@ -1,4 +1,4 @@
-from Settings import *
+from Constants import *
 from Meshes.Base_Mesh import BaseMesh
 from Noise import *
 
@@ -38,7 +38,7 @@ class CloudMesh(BaseMesh):
         width = WORLD_W * CHUNK_SIZE
         depth = WORLD_D * CHUNK_SIZE
 
-        y = CLOUD_HEIGHT
+        y = CLOUD_LVL
         visited = set()
 
         for z in range(depth):

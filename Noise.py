@@ -1,4 +1,4 @@
-from Settings import SEED
+from Constants import SEED
 from numba import njit
 from opensimplex.internals import _noise2, _noise3, _init
 

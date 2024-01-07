@@ -1,4 +1,4 @@
-from Settings import *
+from Constants import *
 from Meshes.Quad_Mesh import QuadMesh
 
 class Crosshair:
